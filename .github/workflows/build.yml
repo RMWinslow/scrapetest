@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 * * * *'  # This cron expression schedules the workflow to run every 4 hours
 
 jobs:
   build:
