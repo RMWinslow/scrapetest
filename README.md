@@ -8,3 +8,5 @@ I'd like to see if I'm able to:
 
 
 I am currently doing an otherwise senseless update to trigger the github actions again. (I know there is a better way to do things.)
+
+Build script completed successfully but page isn't showing up. Before I fiddle with hidden keys, let's see if rebuilding the site works.
