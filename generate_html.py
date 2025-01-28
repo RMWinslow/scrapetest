@@ -1,14 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import xml.etree.ElementTree as ET
 
-# Fetch the content from example.com
-url = 'http://example.com'
-response = requests.get(url)
-soup = BeautifulSoup(response.content, 'html.parser')
+# Fetch the RSS feed from YouTube
+rss_url = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCfMJ2MchTSW2kWaT0kK94Yw'
+rss_response = requests.get(rss_url)
+rss_content = rss_response.content
 
-# Extract the main content (for simplicity, we'll grab the first paragraph)
-main_content = soup.find('p').text if soup.find('p') else "No content found"
+# Parse the RSS feed
+root = ET.fromstring(rss_content)
+latest_video = root.find('entry')
+
+# Extract details of the latest video
+video_title = latest_video.find('title').text
+video_url = latest_video.find('link').attrib['href']
+video_thumbnail_url = latest_video.find('{http://search.yahoo.com/mrss/}group').find('{http://search.yahoo.com/mrss/}thumbnail').attrib['url']
+video_date = latest_video.find('published').text
 
 # Get the current timestamp
 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -24,7 +32,13 @@ html_content = f"""
 </head>
 <body>
     <h1>Beans</h1>
-    <blockquote>{main_content}</blockquote>
+    <blockquote>
+        <h2>Latest Video</h2>
+        <p><strong>Title:</strong> {video_title}</p>
+        <p><strong>URL:</strong> <a href="{video_url}">{video_url}</a></p>
+        <p><strong>Date:</strong> {video_date}</p>
+        <img src="{video_thumbnail_url}" alt="Thumbnail">
+    </blockquote>
     <p>Generated on: {timestamp}</p>
 </body>
 </html>
